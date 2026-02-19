@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - include:
+      file: changes/0001-create-cliente-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0002-create-produto-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0003-create-pedido-tables.yaml
+      relativeToChangelogFile: true

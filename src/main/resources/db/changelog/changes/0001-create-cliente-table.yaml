@@ -1,0 +1,89 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0001-create-cliente-table
+      author: golden
+      changes:
+        - createTable:
+            tableName: cliente
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nome
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: cpf
+                  type: varchar(14)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: logradouro
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: numero
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: complemento
+                  type: varchar(255)
+              - column:
+                  name: bairro
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cidade
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: uf
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cep
+                  type: varchar(9)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_cliente_email
+            tableName: cliente
+            columns:
+              - column:
+                  name: email
+        - createIndex:
+            indexName: idx_cliente_cpf
+            tableName: cliente
+            columns:
+              - column:
+                  name: cpf

@@ -1,0 +1,124 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0003-create-pedido-tables
+      author: golden
+      changes:
+        - createTable:
+            tableName: pedido
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: cliente_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_pedido_cliente
+                    references: cliente(id)
+              - column:
+                  name: subtotal
+                  type: decimal(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: desconto_total
+                  type: decimal(10, 2)
+                  defaultValueNumeric: 0.00
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total
+                  type: decimal(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: pedido_item
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: pedido_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_pedido_item_pedido
+                    references: pedido(id)
+              - column:
+                  name: produto_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_pedido_item_produto
+                    references: produto(id)
+              - column:
+                  name: quantidade
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: preco_unitario
+                  type: decimal(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: desconto
+                  type: decimal(10, 2)
+                  defaultValueNumeric: 0.00
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subtotal
+                  type: decimal(10, 2)
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_pedido_cliente
+            tableName: pedido
+            columns:
+              - column:
+                  name: cliente_id
+        - createIndex:
+            indexName: idx_pedido_status
+            tableName: pedido
+            columns:
+              - column:
+                  name: status
+        - createIndex:
+            indexName: idx_pedido_item_pedido
+            tableName: pedido_item
+            columns:
+              - column:
+                  name: pedido_id
+        - createIndex:
+            indexName: idx_pedido_item_produto
+            tableName: pedido_item
+            columns:
+              - column:
+                  name: produto_id

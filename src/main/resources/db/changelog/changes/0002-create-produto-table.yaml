@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0002-create-produto-table
+      author: golden
+      changes:
+        - createTable:
+            tableName: produto
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: sku
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: nome
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: preco_bruto
+                  type: decimal(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: estoque
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: estoque_minimo
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ativo
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_produto_sku
+            tableName: produto
+            columns:
+              - column:
+                  name: sku
+        - createIndex:
+            indexName: idx_produto_ativo
+            tableName: produto
+            columns:
+              - column:
+                  name: ativo
