@@ -17,11 +17,8 @@ public class PedidoScheduler {
         this.pedidoService = pedidoService;
     }
 
-    /**
-     * Tarefa agendada para verificar pedidos atrasados a cada 1 hora
-     * Pedidos CREATED com mais de 48h são marcados como LATE
-     */
-    @Scheduled(fixedRate = 3600000) // 1 hora em milissegundos
+    
+    @Scheduled(fixedRate = 3600000) 
     public void verificarPedidosAtrasados() {
         logger.info("Iniciando verificação de pedidos atrasados");
         pedidoService.processarPedidosAtrasados();

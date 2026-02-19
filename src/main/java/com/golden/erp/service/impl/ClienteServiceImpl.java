@@ -37,7 +37,6 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public ClienteResponse criar(ClienteRequest request) {
-        // Verificar se já existe cliente com o mesmo email ou CPF
         if (clienteRepository.existsByEmail(request.getEmail())) {
             throw new ResourceAlreadyExistsException("Cliente", "email", request.getEmail());
         }
@@ -46,10 +45,8 @@ public class ClienteServiceImpl implements ClienteService {
             throw new ResourceAlreadyExistsException("Cliente", "cpf", request.getCpf());
         }
         
-        // Consultar o CEP e preencher os dados de endereço
         preencherEndereco(request);
         
-        // Converter para entidade e salvar
         Cliente cliente = clienteMapper.toEntity(request);
         cliente = clienteRepository.save(cliente);
         
@@ -70,7 +67,6 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente", "id", id));
         
-        // Verificar se já existe outro cliente com o mesmo email ou CPF
         clienteRepository.findByEmail(request.getEmail())
                 .ifPresent(c -> {
                     if (!c.getId().equals(id)) {
@@ -85,12 +81,10 @@ public class ClienteServiceImpl implements ClienteService {
                     }
                 });
         
-        // Consultar o CEP e preencher os dados de endereço se o CEP foi alterado
         if (!cliente.getCep().equals(request.getCep())) {
             preencherEndereco(request);
         }
         
-        // Atualizar a entidade e salvar
         clienteMapper.updateEntityFromRequest(request, cliente);
         cliente = clienteRepository.save(cliente);
         
@@ -137,7 +131,6 @@ public class ClienteServiceImpl implements ClienteService {
                 throw new CepNotFoundException(cep);
             }
             
-            // Preencher os dados de endereço apenas se não foram fornecidos
             if (request.getLogradouro() == null || request.getLogradouro().isEmpty()) {
                 request.setLogradouro(viaCepResponse.getLogradouro());
             }

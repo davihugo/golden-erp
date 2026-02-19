@@ -48,7 +48,6 @@ public class ProdutoServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Configurar objetos de teste
         produtoRequest = new ProdutoRequest();
         produtoRequest.setSku("SKU123");
         produtoRequest.setNome("Produto Teste");

@@ -51,7 +51,6 @@ public class ClienteServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Configurar objetos de teste
         clienteRequest = new ClienteRequest();
         clienteRequest.setNome("João Silva");
         clienteRequest.setEmail("joao@email.com");
@@ -94,7 +93,6 @@ public class ClienteServiceTest {
 
     @Test
     void criar_DeveRetornarClienteResponse_QuandoDadosValidos() {
-        // Arrange
         when(clienteRepository.existsByEmail(anyString())).thenReturn(false);
         when(clienteRepository.existsByCpf(anyString())).thenReturn(false);
         when(viaCepClient.consultarCep(anyString())).thenReturn(viaCepResponse);
@@ -102,10 +100,8 @@ public class ClienteServiceTest {
         when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
         when(clienteMapper.toResponse(any(Cliente.class))).thenReturn(clienteResponse);
 
-        // Act
         ClienteResponse result = clienteService.criar(clienteRequest);
 
-        // Assert
         assertNotNull(result);
         assertEquals(clienteResponse.getId(), result.getId());
         assertEquals(clienteResponse.getNome(), result.getNome());
@@ -121,10 +117,8 @@ public class ClienteServiceTest {
 
     @Test
     void criar_DeveLancarResourceAlreadyExistsException_QuandoEmailJaExiste() {
-        // Arrange
         when(clienteRepository.existsByEmail(anyString())).thenReturn(true);
 
-        // Act & Assert
         assertThrows(ResourceAlreadyExistsException.class, () -> {
             clienteService.criar(clienteRequest);
         });
@@ -135,11 +129,9 @@ public class ClienteServiceTest {
 
     @Test
     void criar_DeveLancarResourceAlreadyExistsException_QuandoCpfJaExiste() {
-        // Arrange
         when(clienteRepository.existsByEmail(anyString())).thenReturn(false);
         when(clienteRepository.existsByCpf(anyString())).thenReturn(true);
 
-        // Act & Assert
         assertThrows(ResourceAlreadyExistsException.class, () -> {
             clienteService.criar(clienteRequest);
         });
@@ -151,7 +143,6 @@ public class ClienteServiceTest {
 
     @Test
     void criar_DeveLancarCepNotFoundException_QuandoCepInvalido() {
-        // Arrange
         when(clienteRepository.existsByEmail(anyString())).thenReturn(false);
         when(clienteRepository.existsByCpf(anyString())).thenReturn(false);
         
@@ -159,7 +150,6 @@ public class ClienteServiceTest {
         errorResponse.setErro(true);
         when(viaCepClient.consultarCep(anyString())).thenReturn(errorResponse);
 
-        // Act & Assert
         assertThrows(CepNotFoundException.class, () -> {
             clienteService.criar(clienteRequest);
         });
@@ -172,12 +162,11 @@ public class ClienteServiceTest {
 
     @Test
     void criar_DeveLancarCepNotFoundException_QuandoErroNaConsultaViaCep() {
-        // Arrange
+        
         when(clienteRepository.existsByEmail(anyString())).thenReturn(false);
         when(clienteRepository.existsByCpf(anyString())).thenReturn(false);
         when(viaCepClient.consultarCep(anyString())).thenThrow(FeignException.class);
 
-        // Act & Assert
         assertThrows(CepNotFoundException.class, () -> {
             clienteService.criar(clienteRequest);
         });
@@ -190,14 +179,11 @@ public class ClienteServiceTest {
 
     @Test
     void buscarPorId_DeveRetornarClienteResponse_QuandoClienteExiste() {
-        // Arrange
         when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
         when(clienteMapper.toResponse(any(Cliente.class))).thenReturn(clienteResponse);
 
-        // Act
         ClienteResponse result = clienteService.buscarPorId(1L);
 
-        // Assert
         assertNotNull(result);
         assertEquals(clienteResponse.getId(), result.getId());
         assertEquals(clienteResponse.getNome(), result.getNome());
@@ -208,10 +194,8 @@ public class ClienteServiceTest {
 
     @Test
     void buscarPorId_DeveLancarResourceNotFoundException_QuandoClienteNaoExiste() {
-        // Arrange
         when(clienteRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(ResourceNotFoundException.class, () -> {
             clienteService.buscarPorId(1L);
         });
@@ -222,15 +206,13 @@ public class ClienteServiceTest {
 
     @Test
     void listar_DeveRetornarPaginaDeClienteResponse() {
-        // Arrange
+        
         Page<Cliente> clientePage = new PageImpl<>(Collections.singletonList(cliente));
         when(clienteRepository.findAll(any(Pageable.class))).thenReturn(clientePage);
         when(clienteMapper.toResponse(any(Cliente.class))).thenReturn(clienteResponse);
 
-        // Act
         Page<ClienteResponse> result = clienteService.listar(Pageable.unpaged());
 
-        // Assert
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         assertEquals(clienteResponse.getId(), result.getContent().get(0).getId());

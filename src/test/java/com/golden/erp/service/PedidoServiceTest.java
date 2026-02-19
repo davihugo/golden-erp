@@ -76,7 +76,6 @@ public class PedidoServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Configurar objetos de teste
         pedidoItemRequest = new PedidoItemRequest();
         pedidoItemRequest.setProdutoId(1L);
         pedidoItemRequest.setQuantidade(2);
@@ -141,7 +140,6 @@ public class PedidoServiceTest {
 
     @Test
     void criar_DeveRetornarPedidoResponse_QuandoDadosValidos() {
-        // Arrange
         when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
         when(pedidoMapper.toEntityWithCliente(any(PedidoRequest.class), any(Cliente.class))).thenReturn(pedido);
         when(produtoRepository.findById(anyLong())).thenReturn(Optional.of(produto));
@@ -150,10 +148,8 @@ public class PedidoServiceTest {
         when(pedidoMapper.toResponse(any(Pedido.class))).thenReturn(pedidoResponse);
         doNothing().when(produtoService).atualizarEstoque(anyLong(), anyInt());
 
-        // Act
         PedidoResponse result = pedidoService.criar(pedidoRequest);
 
-        // Assert
         assertNotNull(result);
         assertEquals(pedidoResponse.getId(), result.getId());
         assertEquals(pedidoResponse.getClienteId(), result.getClienteId());
@@ -170,10 +166,8 @@ public class PedidoServiceTest {
 
     @Test
     void criar_DeveLancarResourceNotFoundException_QuandoClienteNaoExiste() {
-        // Arrange
         when(clienteRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(ResourceNotFoundException.class, () -> {
             pedidoService.criar(pedidoRequest);
         });
@@ -184,12 +178,10 @@ public class PedidoServiceTest {
 
     @Test
     void criar_DeveLancarResourceNotFoundException_QuandoProdutoNaoExiste() {
-        // Arrange
         when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
         when(pedidoMapper.toEntityWithCliente(any(PedidoRequest.class), any(Cliente.class))).thenReturn(pedido);
         when(produtoRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(ResourceNotFoundException.class, () -> {
             pedidoService.criar(pedidoRequest);
         });
@@ -201,14 +193,12 @@ public class PedidoServiceTest {
 
     @Test
     void criar_DeveLancarEstoqueInsuficienteException_QuandoEstoqueInsuficiente() {
-        // Arrange
-        produto.setEstoque(1); // Estoque menor que a quantidade solicitada (2)
+        produto.setEstoque(1); 
         
         when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
         when(pedidoMapper.toEntityWithCliente(any(PedidoRequest.class), any(Cliente.class))).thenReturn(pedido);
         when(produtoRepository.findById(anyLong())).thenReturn(Optional.of(produto));
 
-        // Act & Assert
         assertThrows(EstoqueInsuficienteException.class, () -> {
             pedidoService.criar(pedidoRequest);
         });

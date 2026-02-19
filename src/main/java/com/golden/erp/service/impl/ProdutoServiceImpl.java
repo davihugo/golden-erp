@@ -35,15 +35,12 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     @Transactional
     public ProdutoResponse criar(ProdutoRequest request) {
-        // Verificar se já existe produto com o mesmo SKU
         if (produtoRepository.existsBySku(request.getSku())) {
             throw new ResourceAlreadyExistsException("Produto", "sku", request.getSku());
         }
         
-        // Converter para entidade e salvar
         Produto produto = produtoMapper.toEntity(request);
         
-        // Definir valores padrão se não foram fornecidos
         if (produto.getAtivo() == null) {
             produto.setAtivo(true);
         }
@@ -68,7 +65,6 @@ public class ProdutoServiceImpl implements ProdutoService {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto", "id", id));
         
-        // Verificar se já existe outro produto com o mesmo SKU
         produtoRepository.findBySku(request.getSku())
                 .ifPresent(p -> {
                     if (!p.getId().equals(id)) {
@@ -76,7 +72,6 @@ public class ProdutoServiceImpl implements ProdutoService {
                     }
                 });
         
-        // Atualizar a entidade e salvar
         produtoMapper.updateEntityFromRequest(request, produto);
         produto.setUpdatedAt(LocalDateTime.now());
         produto = produtoRepository.save(produto);
@@ -128,7 +123,6 @@ public class ProdutoServiceImpl implements ProdutoService {
         
         int novoEstoque = produto.getEstoque() + quantidade;
         
-        // Verificar se o estoque ficará negativo
         if (novoEstoque < 0) {
             logger.error("Tentativa de deixar estoque negativo para o produto {}: {} + {} = {}", 
                     produto.getSku(), produto.getEstoque(), quantidade, novoEstoque);
@@ -139,7 +133,6 @@ public class ProdutoServiceImpl implements ProdutoService {
         produto.setUpdatedAt(LocalDateTime.now());
         produtoRepository.save(produto);
         
-        // Logar se o estoque estiver abaixo do mínimo
         if (novoEstoque <= produto.getEstoqueMinimo()) {
             logger.warn("Estoque baixo para o produto {}: {} (mínimo: {})", 
                     produto.getSku(), novoEstoque, produto.getEstoqueMinimo());

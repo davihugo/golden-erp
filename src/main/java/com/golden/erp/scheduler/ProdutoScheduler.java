@@ -20,11 +20,7 @@ public class ProdutoScheduler {
         this.produtoService = produtoService;
     }
 
-    /**
-     * Tarefa agendada para verificar produtos com estoque abaixo do mínimo
-     * Executa todos os dias às 03:00
-     */
-    @Scheduled(cron = "0 0 3 * * ?") // Todos os dias às 03:00
+    @Scheduled(cron = "0 0 3 * * ?") 
     public void verificarProdutosComEstoqueBaixo() {
         logger.info("Iniciando verificação de produtos com estoque abaixo do mínimo");
         
