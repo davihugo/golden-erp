@@ -98,7 +98,7 @@ com.golden.erp
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/erp.git
+git clone https://github.com/-usuario/erp.git
 cd erp
 ```
 
@@ -113,7 +113,7 @@ A aplicação estará disponível em http://localhost:8080
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/erp.git
+git clone https://github.com/davihugo/erp.git
 cd erp
 ```
 
